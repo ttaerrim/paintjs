@@ -4,12 +4,17 @@ const colors = document.getElementsByClassName('jsColor');
 const range = document.getElementById('jsRange');
 const mode = document.getElementById('jsMode');
 
+const INITIAL_COLOR = 'black';
+const CANVAS_SIZE = 500;
 //canvas 사이즈 설정해야 함 그래야 그려짐
-canvas.width = 500;
-canvas.height = 500;
+canvas.width = CANVAS_SIZE;
+canvas.height = CANVAS_SIZE;
 
-ctx.strokeStyle = 'black';
+ctx.strokeStyle = INITIAL_COLOR;
+ctx.fillStyle = INITIAL_COLOR;
 ctx.lineWidth = 2.5;
+
+
 
 let painting = false;
 let filling = false;
@@ -39,16 +44,10 @@ function onMouseUp(event) {
     stopPainting();
 }
 
-if (canvas) {
-    canvas.addEventListener('mousemove', onMouseMove);
-    canvas.addEventListener('mousedown', startPainting);
-    canvas.addEventListener('mouseup', stopPainting);
-    canvas.addEventListener('mouseleave', stopPainting);
-}
-
-function handleColor(event) {
+function handleColorClick(event) {
     const color = event.target.style.backgroundColor;
     ctx.strokeStyle = color;
+    ctx.fillStyle = color;
 }
 
 function handleRangeChange(event) {
@@ -66,10 +65,22 @@ function handleModeClick() {
     }
 }
 
-if (colors) {
-    Array.from(colors).forEach(color => color.addEventListener('click', handleColor));
-    // colors는 배열이 아니라서 (HTMLCollection인가 그거임) 배열로 바꿔 주고 forEach로 모든 색당 하나씩 이벤트리스너 달아줌
+function handleCanvasClick() {
+    if (filling) {
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
 }
+
+if (canvas) {
+    canvas.addEventListener('mousemove', onMouseMove);
+    canvas.addEventListener('mousedown', startPainting);
+    canvas.addEventListener('mouseup', stopPainting);
+    canvas.addEventListener('mouseleave', stopPainting);
+    canvas.addEventListener('click', handleCanvasClick);
+}
+
+Array.from(colors).forEach(color => color.addEventListener('click', handleColorClick));
+// colors는 배열이 아니라서 (HTMLCollection인가 그거임) 배열로 바꿔 주고 forEach로 모든 색당 하나씩 이벤트리스너 달아줌
 
 if (range) {
     range.addEventListener('input', handleRangeChange);
