@@ -28,8 +28,9 @@ function stopPainting() {
 }
 
 function startPainting(event) {
-    painting = true;
-    // event.button === 0 넣기
+    if (event.button === 0) {
+        painting = true;
+    }
 }
 
 function onMouseMove(event) {
